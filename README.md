@@ -2,10 +2,15 @@
 My life finder
 =================
 
-This is going to be a customizable *Game of Life* implementation.
+This is going to be a *Game of Life* implementation.
 
 To do:
 
-- [ ] flexible structure of the game
+- [ ] generate initial state
+- [ ] draw on canvas
 - [ ] use webworkers
+- [ ] genetic algorithms
+  - [ ] selection 
+  - [ ] crossover 
+  - [ ] mutation
 - [ ] write tests for known cases
