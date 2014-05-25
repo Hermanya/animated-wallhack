@@ -1,0 +1,5 @@
+html{font-family:Monospace;background-color:#dcd6b2;border-top:solid 4px #b8c7a8}
+.population{width:128px;height:128px;float:left;margin:.75em;border:solid 4px #e1e5ca;background-color:#b0e1ce;overflow:wrap;}
+.population .row{height:8px;}
+.population .row .cell{display:inline-block;width:8px;height:8px;}
+.population .row .cell.alive{background-color:#aea094}

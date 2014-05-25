@@ -1,15 +1,20 @@
 (function() {
   define(["random"], function(random) {
     return function(dimensionNum, dimensionSize, populationSize) {
-      var cellPath, d, halfdimensionSize, i, insertAnotherOne, population, state, substate;
+      var cellPath, d, halfdimensionSize, init, insertAnotherOne, population, state, substate;
       state = [];
-      d = dimensionNum;
-      while (--d) {
-        i = dimensionSize;
-        while (i--) {
-          state[i] = [];
+      init = function(substate, dimensionsLeft) {
+        var i;
+        if (dimensionsLeft) {
+          i = dimensionSize;
+          while (--i) {
+            substate[i - 1] = [];
+            init(substate[i - 1], dimensionsLeft - 1);
+          }
         }
-      }
+        return substate = substate[0];
+      };
+      init(state, dimensionNum - 1);
       population = [];
       halfdimensionSize = dimensionSize / 2;
       substate = state;
@@ -33,28 +38,25 @@
         }
         substate = state;
         d = dimensionNum;
-        while (d--) {
-          substate = state[cellPath[d]];
+        while (--d) {
+          substate = substate[cellPath[dimensionNum - d - 1]];
         }
         if (substate[cellPath[cellPath.length - 1]]) {
           return false;
         } else {
           substate[cellPath[cellPath.length - 1]] = 1;
           population.push(cellPath);
-          console.log(cellPath);
           return true;
         }
       };
       while (--populationSize) {
         while (!insertAnotherOne()) {
-          console.log('Have a good day!');
+          console.log('Cell already exists, respawning.');
         }
       }
-      state;
+      state.initial = population;
       return state;
     };
   });
 
 }).call(this);
-
-//# sourceMappingURL=stageGenerator.js.map

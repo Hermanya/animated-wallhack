@@ -1,16 +1,16 @@
 (function() {
   define([], function() {
-    return function(dimensionNum, stageSizeNum, populationSize) {
-      var i, population, stage;
-      stage = [];
+    return function(dimensionNum, dimensionSizeNum, populationSize) {
+      var i, population, state;
+      state = [];
       while (--dimensionNum) {
-        i = stageSizeNum;
+        i = dimensionSizeNum;
         while (i--) {
-          stage[i] = [];
+          state[i] = [];
         }
       }
       population = [];
-      return stage;
+      return state;
     };
   });
 

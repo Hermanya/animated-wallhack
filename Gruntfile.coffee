@@ -20,8 +20,8 @@ module.exports = (grunt) ->
       glob_to_multiple:
         expand: true
         flatten: true
-        options:
-          sourceMap: true
+      #  options:
+      #    sourceMap: true
         cwd: '_app/'
         src: ['*.coffee']
         dest: 'app/JavaScripts/'
@@ -32,6 +32,7 @@ module.exports = (grunt) ->
       compile:
         options:
           name: 'config',
+          generateSourceMaps: true,
           mainConfigFile: 'app/JavaScripts/config.js',
           out: 'app/JavaScripts/require.js',
           optimize: 'none'

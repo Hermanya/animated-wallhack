@@ -907,7 +907,7 @@ var requirejs, require, define;
                         this.defined = true;
                     }
 
-                    //Finished the define stage. Allow calling check again
+                    //Finished the define state. Allow calling check again
                     //to allow define notifications below in the case of a
                     //cycle.
                     this.defining = false;

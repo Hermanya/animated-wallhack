@@ -25,6 +25,7 @@
     "grunt-contrib-stylus": "*",
     "grunt-coffeelint": "*",
     "grunt-contrib-watch": "*",
-    "grunt-contrib-requirejs": "*"
+    "grunt-contrib-requirejs": "*",
+    "grunt-mocha-test": "^0.10.2"
   }
 }

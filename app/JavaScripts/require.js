@@ -9198,32 +9198,35 @@ return jQuery;
 
 }).call(this);
 
-//# sourceMappingURL=random.js.map
-;
 (function() {
-  define('stageGenerator',["random"], function(random) {
-    return function(dimensionNum, stageSize, populationSize) {
-      var cellPath, d, halfStageSize, i, insertAnotherOne, population, stage, substage;
-      stage = [];
-      d = dimensionNum;
-      while (--d) {
-        i = stageSize;
-        while (i--) {
-          stage[i] = [];
+  define('stateGenerator',["random"], function(random) {
+    return function(dimensionNum, dimensionSize, populationSize) {
+      var cellPath, d, halfdimensionSize, init, insertAnotherOne, population, state, substate;
+      state = [];
+      init = function(substate, dimensionsLeft) {
+        var i;
+        if (dimensionsLeft) {
+          i = dimensionSize;
+          while (--i) {
+            substate[i - 1] = [];
+            init(substate[i - 1], dimensionsLeft - 1);
+          }
         }
-      }
+        return substate = substate[0];
+      };
+      init(state, dimensionNum - 1);
       population = [];
-      halfStageSize = stageSize / 2;
-      substage = stage;
+      halfdimensionSize = dimensionSize / 2;
+      substate = state;
       cellPath = [];
       d = dimensionNum;
       while (--d) {
-        cellPath.push(halfStageSize);
-        substage = substage[halfStageSize];
+        cellPath.push(halfdimensionSize);
+        substate = substate[halfdimensionSize];
       }
-      cellPath.push(halfStageSize);
+      cellPath.push(halfdimensionSize);
       population.push(cellPath);
-      substage[halfStageSize] = 1;
+      substate[halfdimensionSize] = 1;
       insertAnotherOne = function() {
         var shiftNumber;
         cellPath = population[random(population.length)];
@@ -9233,46 +9236,81 @@ return jQuery;
         while (shiftNumber--) {
           cellPath[random(dimensionNum)] += random(2) ? 1 : -1;
         }
-        substage = stage;
+        substate = state;
         d = dimensionNum;
-        while (d--) {
-          substage = stage[cellPath[d]];
+        while (--d) {
+          substate = substate[cellPath[dimensionNum - d - 1]];
         }
-        if (substage[cellPath[cellPath.length - 1]]) {
+        if (substate[cellPath[cellPath.length - 1]]) {
           return false;
         } else {
-          substage[cellPath[cellPath.length - 1]] = 1;
+          substate[cellPath[cellPath.length - 1]] = 1;
           population.push(cellPath);
-          console.log(cellPath);
           return true;
         }
       };
       while (--populationSize) {
         while (!insertAnotherOne()) {
-          console.log('Have a good day!');
+          console.log('Cell already exists, respawning.');
         }
       }
-      console.log(population);
-      return stage;
+      state.initial = population;
+      return state;
     };
   });
 
 }).call(this);
 
-//# sourceMappingURL=stageGenerator.js.map
-;
 (function() {
-  define('main',["jquery", "stageGenerator"], function($, generateStage) {
-    var stage;
-    $('body').append('jQuery ' + $.fn.jquery + ' loaded!');
-    stage = generateStage(2, 8, 4);
-    return console.log(stage);
+  define('render',[], function() {
+    return function(state, element) {
+      var cell, i, str, substate, _i, _j, _k, _len, _len1, _results, _results1;
+      element.html('');
+      if (typeof state[0] !== 'object') {
+        _results = [];
+        for (_i = 0, _len = state.length; _i < _len; _i++) {
+          cell = state[_i];
+          _results.push(element.append(cell ? '|' : '&nbsp;'));
+        }
+        return _results;
+      } else if (typeof state[0][0] !== 'object') {
+        _results1 = [];
+        for (_j = 0, _len1 = state.length; _j < _len1; _j++) {
+          substate = state[_j];
+          str = '<div class="row">';
+          for (i = _k = 0; _k < 16; i = ++_k) {
+            str += '<div class="cell' + (substate[i] ? ' alive' : '') + '"></div>';
+          }
+          _results1.push(element.append(str + '</div>'));
+        }
+        return _results1;
+      } else {
+        return element.html('This state is unrenderable! See console output.');
+      }
+    };
   });
 
 }).call(this);
 
-//# sourceMappingURL=main.js.map
-;
+(function() {
+  define('main',['jquery', 'stateGenerator', 'render'], function($, generatestate, render) {
+    var i, initialPopulation, population, populations, _i, _j, _len, _results;
+    populations = [];
+    for (i = _i = 0; _i < 16; i = ++_i) {
+      initialPopulation = generatestate(2, 16, 4);
+      $('body').append('<div class="population" id="population' + i + '"></div>');
+      populations.push(initialPopulation);
+    }
+    _results = [];
+    for (i = _j = 0, _len = populations.length; _j < _len; i = ++_j) {
+      population = populations[i];
+      _results.push(render(population, $('#population' + i)));
+    }
+    return _results;
+  });
+
+}).call(this);
+
 (function() {
   require.config({
     paths: {
@@ -9287,7 +9325,7 @@ return jQuery;
 
 }).call(this);
 
-//# sourceMappingURL=config.js.map
-;
 define("config", function(){});
 
+
+//# sourceMappingURL=require.js.map
