@@ -24,7 +24,7 @@ module.exports = (grunt) ->
           sourceMap: true
         cwd: '_app/'
         src: ['*.coffee']
-        dest: '_app/JavaScripts/'
+        dest: 'app/JavaScripts/'
         ext: '.js'
     coffeelint:
       app: ['*.coffee']
@@ -32,8 +32,8 @@ module.exports = (grunt) ->
       compile:
         options:
           name: 'config',
-          mainConfigFile: '_app/JavaScripts/config.js',
-          out: 'app/require.js',
+          mainConfigFile: 'app/JavaScripts/config.js',
+          out: 'app/JavaScripts/require.js',
           optimize: 'none'
   )
   grunt.loadNpmTasks('grunt-contrib-stylus')

@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "render.js",
+  "sourceRoot": "../../_app/",
+  "sources": [
+    "render.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,EAAA,MAAA,CAAO,CAAC,QAAD,CAAP,EAAkB,SAAC,CAAD,GAAA;AAChB,QAAA,GAAA;AAAA,IAAA,GAAA,GAAM,CAAA,CAAE,SAAF,CAAY,CAAC,UAAb,CAAwB,IAAxB,CAAN,CAAA;AACA,WAAO,SAAC,KAAD,GAAA,CAAP,CAFgB;EAAA,CAAlB,CAAA,CAAA;AAAA"
+}
