@@ -63,13 +63,6 @@
 
       /*
       number of surrounding cells = 3 ^ dimensions - 1
-      isAlive@[path,to,cell]
-      iterate by splitting into three options
-      check if value equals including the path
-      computer
-        init
-        process
-      i/o proc
        */
     };
   });

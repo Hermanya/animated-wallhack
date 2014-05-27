@@ -17,5 +17,5 @@ define([],()->
             (if substate[i].isAlive then ' alive' else '') + '" title="'+substate[i].path+'"></div>'
         element.append str + '</div>'
     else
-      element.html 'This state is unrenderable! See console output.'
+      element.html 'This number of dimensions is unrenderable! See console output.'
 )

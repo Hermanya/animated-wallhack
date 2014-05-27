@@ -24,7 +24,7 @@
         }
         return _results1;
       } else {
-        return element.html('This state is unrenderable! See console output.');
+        return element.html('This number of dimensions is unrenderable! See console output.');
       }
     };
   });

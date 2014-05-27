@@ -38,11 +38,11 @@ define(["random"], (random)->
 
       insertAnotherOne = ()->
         cellPath = clone population[random population.length]
-        # Shift it
+      # Shift it
         shiftsNumber = (random dimensionNum) + 1
         while(shiftsNumber--)
           cellPath[random dimensionNum]+= if random(2) then 1 else -1;
-        # Push it
+      # Push it
         substate = state
         d = dimensionNum
         while(--d)

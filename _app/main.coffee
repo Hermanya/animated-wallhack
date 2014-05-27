@@ -17,7 +17,9 @@ define(['jquery',
     set.push specimen
   window.setInterval ->
     for specimen, i in set
-      output specimen.states[specimen.states.length - 1], specimen.element, specimen.params[1]
+      output specimen.states[specimen.states.length - 1],
+            specimen.element,
+            specimen.params[1]
       process specimen
   , 1000
 
