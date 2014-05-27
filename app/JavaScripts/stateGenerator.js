@@ -55,6 +55,7 @@
         }
       }
       state.initial = population;
+      state.params = arguments;
       return state;
     };
   });

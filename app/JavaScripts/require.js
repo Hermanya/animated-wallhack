@@ -9199,22 +9199,40 @@ return jQuery;
 }).call(this);
 
 (function() {
-  define('stateGenerator',["random"], function(random) {
+  define('input',["random"], function(random) {
     return function(dimensionNum, dimensionSize, populationSize) {
-      var cellPath, d, halfdimensionSize, init, insertAnotherOne, population, state, substate;
+      var cellPath, clone, d, halfdimensionSize, init, insertAnotherOne, population, state, substate;
       state = [];
-      init = function(substate, dimensionsLeft) {
-        var i;
+      clone = function(object) {
+        object = JSON.stringify(object);
+        return JSON.parse(object);
+      };
+      init = function(substate, dimensionsLeft, path) {
+        var cellPath, dimensionPath, i, j, _results;
         if (dimensionsLeft) {
           i = dimensionSize;
-          while (--i) {
-            substate[i - 1] = [];
-            init(substate[i - 1], dimensionsLeft - 1);
+          _results = [];
+          while (i--) {
+            dimensionPath = clone(path);
+            dimensionPath.push(i);
+            substate[i] = [];
+            if (dimensionsLeft === 1) {
+              j = dimensionSize;
+              while (j--) {
+                cellPath = clone(dimensionPath);
+                cellPath.push(j);
+                substate[i][j] = {
+                  path: cellPath,
+                  isCell: true
+                };
+              }
+            }
+            _results.push(init(substate[i], dimensionsLeft - 1, dimensionPath));
           }
+          return _results;
         }
-        return substate = substate[0];
       };
-      init(state, dimensionNum - 1);
+      init(state, dimensionNum - 1, []);
       population = [];
       halfdimensionSize = dimensionSize / 2;
       substate = state;
@@ -9226,14 +9244,12 @@ return jQuery;
       }
       cellPath.push(halfdimensionSize);
       population.push(cellPath);
-      substate[halfdimensionSize] = 1;
+      substate[halfdimensionSize].isAlive = true;
       insertAnotherOne = function() {
-        var shiftNumber;
-        cellPath = population[random(population.length)];
-        cellPath = JSON.stringify(cellPath);
-        cellPath = JSON.parse(cellPath);
-        shiftNumber = (random(dimensionNum)) + 1;
-        while (shiftNumber--) {
+        var alreadyExists, shiftsNumber;
+        cellPath = clone(population[random(population.length)]);
+        shiftsNumber = (random(dimensionNum)) + 1;
+        while (shiftsNumber--) {
           cellPath[random(dimensionNum)] += random(2) ? 1 : -1;
         }
         substate = state;
@@ -9241,10 +9257,11 @@ return jQuery;
         while (--d) {
           substate = substate[cellPath[dimensionNum - d - 1]];
         }
-        if (substate[cellPath[cellPath.length - 1]]) {
+        alreadyExists = substate[cellPath[cellPath.length - 1]].isAlive;
+        if (alreadyExists) {
           return false;
         } else {
-          substate[cellPath[cellPath.length - 1]] = 1;
+          substate[cellPath[cellPath.length - 1]].isAlive = true;
           population.push(cellPath);
           return true;
         }
@@ -9255,6 +9272,7 @@ return jQuery;
         }
       }
       state.initial = population;
+      state.params = arguments;
       return state;
     };
   });
@@ -9262,24 +9280,26 @@ return jQuery;
 }).call(this);
 
 (function() {
-  define('render',[], function() {
-    return function(state, element) {
-      var cell, i, str, substate, _i, _j, _k, _len, _len1, _results, _results1;
+  define('output',[], function() {
+    return function(state, element, size) {
+      var cell, i, str, substate, _i, _j, _len, _len1, _results, _results1;
+      console.log(state);
       element.html('');
-      if (typeof state[0] !== 'object') {
+      if (state[0].isCell) {
         _results = [];
         for (_i = 0, _len = state.length; _i < _len; _i++) {
           cell = state[_i];
-          _results.push(element.append(cell ? '|' : '&nbsp;'));
+          _results.push(element.append(cell.isAlive ? '|' : '&nbsp;'));
         }
         return _results;
-      } else if (typeof state[0][0] !== 'object') {
+      } else if (state[0][0].isCell) {
         _results1 = [];
         for (_j = 0, _len1 = state.length; _j < _len1; _j++) {
           substate = state[_j];
           str = '<div class="row">';
-          for (i = _k = 0; _k < 16; i = ++_k) {
-            str += '<div class="cell' + (substate[i] ? ' alive' : '') + '"></div>';
+          i = size;
+          while (i--) {
+            str += '<div class="cell' + (substate[i].isAlive ? ' alive' : '') + '" title="' + substate[i].path + '"></div>';
           }
           _results1.push(element.append(str + '</div>'));
         }
@@ -9293,20 +9313,109 @@ return jQuery;
 }).call(this);
 
 (function() {
-  define('main',['jquery', 'stateGenerator', 'render'], function($, generatestate, render) {
-    var i, initialPopulation, population, populations, _i, _j, _len, _results;
-    populations = [];
-    for (i = _i = 0; _i < 16; i = ++_i) {
-      initialPopulation = generatestate(2, 16, 4);
-      $('body').append('<div class="population" id="population' + i + '"></div>');
-      populations.push(initialPopulation);
+  define('process',[], function() {
+    return function(specimen) {
+      var cell, cellsToToggle, clone, dimensionSize, index, nestedMap, newState, previousState, _i, _j, _len, _len1, _ref, _state;
+      clone = function(object) {
+        object = JSON.stringify(object);
+        return JSON.parse(object);
+      };
+      previousState = specimen.states[specimen.states.length - 1];
+      newState = clone(previousState);
+      cellsToToggle = [];
+      dimensionSize = specimen.params[1];
+      nestedMap = function(dimension) {
+        if (!dimension[0].isCell) {
+          return dimension.map(nestedMap);
+        } else {
+          return dimension.map(function(givenCell) {
+            var lifeCount, pathTree;
+            lifeCount = 0;
+            pathTree = function(dimensionIndex, _state) {
+              var neighbor, nextIndex;
+              if (!_state.isCell) {
+                nextIndex = dimensionIndex + 1;
+                pathTree(nextIndex, _state[givenCell.path[dimensionIndex]]);
+                if (givenCell.path[dimensionIndex] - 1 > -1) {
+                  pathTree(nextIndex, _state[givenCell.path[dimensionIndex] - 1]);
+                }
+                if (givenCell.path[dimensionIndex] + 1 < dimensionSize) {
+                  return pathTree(nextIndex, _state[givenCell.path[dimensionIndex] + 1]);
+                }
+              } else {
+                neighbor = _state;
+                if (neighbor.isAlive && (neighbor.path !== givenCell.path)) {
+                  return lifeCount++;
+                }
+              }
+            };
+            pathTree(0, previousState);
+            if (givenCell.isAlive) {
+              if (lifeCount < 2 || lifeCount > 3) {
+                return cellsToToggle.push(givenCell);
+              }
+            } else {
+              if (lifeCount === 3) {
+                return cellsToToggle.push(givenCell);
+              }
+            }
+          });
+        }
+      };
+      nestedMap(previousState);
+      for (_i = 0, _len = cellsToToggle.length; _i < _len; _i++) {
+        cell = cellsToToggle[_i];
+        _state = newState;
+        _ref = cell.path;
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          index = _ref[_j];
+          _state = _state[index];
+        }
+        _state.isAlive = !_state.isAlive;
+      }
+      return specimen.states.push(newState);
+
+      /*
+      number of surrounding cells = 3 ^ dimensions - 1
+      isAlive@[path,to,cell]
+      iterate by splitting into three options
+      check if value equals including the path
+      computer
+        init
+        process
+      i/o proc
+       */
+    };
+  });
+
+}).call(this);
+
+(function() {
+  define('main',['jquery', 'input', 'output', 'process'], function($, input, output, process) {
+    var ageLimit, i, initialPopulation, set, specimen, _i;
+    set = [];
+    ageLimit = 8;
+    for (i = _i = 0; _i < 4; i = ++_i) {
+      $('body').append('<div class="population" id="specimen' + i + '"></div>');
+      initialPopulation = input(2, 32, 8);
+      specimen = {
+        states: [initialPopulation],
+        status: 'alive',
+        params: initialPopulation.params,
+        element: $('#specimen' + i)
+      };
+      set.push(specimen);
     }
-    _results = [];
-    for (i = _j = 0, _len = populations.length; _j < _len; i = ++_j) {
-      population = populations[i];
-      _results.push(render(population, $('#population' + i)));
-    }
-    return _results;
+    return window.setInterval(function() {
+      var _j, _len, _results;
+      _results = [];
+      for (i = _j = 0, _len = set.length; _j < _len; i = ++_j) {
+        specimen = set[i];
+        output(specimen.states[specimen.states.length - 1], specimen.element, specimen.params[1]);
+        _results.push(process(specimen));
+      }
+      return _results;
+    }, 1000);
   });
 
 }).call(this);
