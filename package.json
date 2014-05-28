@@ -21,11 +21,11 @@
   ],
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-coffee": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-connect": "*",
     "grunt-contrib-stylus": "*",
     "grunt-coffeelint": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-contrib-requirejs": "*",
-    "grunt-mocha-test": "^0.10.2"
+    "grunt-mocha-test": "^0.10.2",
+    "grunt-coffeeify": "^0.1.3"
   }
 }

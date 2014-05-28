@@ -1,4 +1,2 @@
-define([],()->
-  return (range)->
-    return Math.floor(Math.random() * range)
-)
+module.exports = (range)->
+  return Math.floor(Math.random() * range)

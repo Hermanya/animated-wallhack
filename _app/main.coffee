@@ -1,14 +1,13 @@
-# to depend on a bower installed component:
-# define(['bower_components/componentName/file'])
-
-define(['jquery',
-'input',
-'output','process'], ($, input, output, process)->
+$ = require '../bower_components/jquery/dist/jquery.js'
+input = require './input.coffee'
+output = require './output.coffee'
+process = require './process.coffee'
+$(document).ready ()->
   set = []
   ageLimit = 8
   for i in [0...4]
-    $('body').append('<div class="population" id="specimen'+i+'"></div>')
-    initialPopulation = input(2, 32, 8);
+    $('body').append('<div class="population" id="specimen' + i + '"></div>');
+    initialPopulation = input 2, 32, 8
     specimen =
       states: [initialPopulation]
       status: 'alive'
@@ -21,6 +20,4 @@ define(['jquery',
             specimen.element,
             specimen.params[1]
       process specimen
-  , 1000
-
-)
+  , 100

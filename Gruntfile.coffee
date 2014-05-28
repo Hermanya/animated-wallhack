@@ -2,45 +2,35 @@ module.exports = (grunt) ->
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json'),
     watch:
+      options:
+        livereload: true
       css:
         files: '**/*.styl'
         tasks: ['stylus']
-        options:
-          livereload: true
-      js:
-        files: '**/*.coffee'
-        tasks: ['coffeelint','coffee','requirejs']
-        options:
-          livereload:true
+      coffee:
+        files: '**/*coffee'
+        tasks: ['coffeeify']
     stylus:
       compile:
         files:
           'app/style.css': ['_app/stylesheets/*.styl']
-    coffee:
-      glob_to_multiple:
-        expand: true
-        flatten: true
-      #  options:
-      #    sourceMap: true
-        cwd: '_app/'
-        src: ['*.coffee']
-        dest: 'app/JavaScripts/'
-        ext: '.js'
     coffeelint:
       app: ['*.coffee']
-    requirejs:
-      compile:
-        options:
-          name: 'config',
-          generateSourceMaps: true,
-          mainConfigFile: 'app/JavaScripts/config.js',
-          out: 'app/JavaScripts/require.js',
-          optimize: 'none'
+    coffeeify:
+      options:
+        debug: true
+      files:
+        src:'_app/*.coffee'
+        dest:'app/script.js'
+    connect:
+      server:
+        keepalive: true
+        livereload: 35729
   )
   grunt.loadNpmTasks('grunt-contrib-stylus')
-  grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-contrib-watch')
-  grunt.loadNpmTasks('grunt-contrib-requirejs')
   grunt.loadNpmTasks('grunt-coffeelint')
+  grunt.loadNpmTasks('grunt-coffeeify')
+  grunt.loadNpmTasks('grunt-contrib-connect')
   grunt.registerTask('default',
-  ['coffeelint','coffee','stylus','requirejs','watch'])
+  ['coffeelint','coffeeify','stylus','connect','watch'])
