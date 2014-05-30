@@ -12,15 +12,17 @@ module.exports = (specimen)->
     else
       dimension.map (givenCell)->
         lifeCount = 0
-
         pathTree = (dimensionIndex, _state)->
           if not _state.path
             nextIndex = dimensionIndex + 1;
-            pathTree nextIndex, _state[givenCell.path[dimensionIndex]]
-            if (givenCell.path[dimensionIndex] - 1 > -1)
-              pathTree nextIndex, _state[givenCell.path[dimensionIndex] - 1]
-            if (givenCell.path[dimensionIndex] + 1 < dimensionSize)
-              pathTree nextIndex, _state[givenCell.path[dimensionIndex] + 1]
+            d = d1 = givenCell.path[dimensionIndex]
+            pathTree nextIndex, _state[d]
+            if d is 0
+              d = dimensionSize
+            pathTree nextIndex, _state[d - 1]
+            if d1 is dimensionSize - 1
+              d1 = -1
+            pathTree nextIndex, _state[d1 + 1]
           else
             neighbor = _state
             if neighbor.isAlive and (neighbor.path isnt givenCell.path)
@@ -34,12 +36,25 @@ module.exports = (specimen)->
             cellsToToggle.push givenCell
 
   nestedMap previousState
+
   for cell in cellsToToggle
     _state = newState
     for index in cell.path
       _state = _state[index]
     _state.isAlive = ! _state.isAlive
-  specimen.states.push newState
+
+  if cellsToToggle.length is 0
+    specimen.status = 'dead'
+    nestedMap = (dimension)->
+      if not dimension[0].path
+        dimension.map nestedMap
+      else
+        dimension.map (cell)->
+          if cell.isAlive
+            specimen.status = 'still'
+            return false
+  specimen.age++;
+  specimen.states = [previousState, newState]
   ###
   number of surrounding cells = 3 ^ dimensions - 1
   ###

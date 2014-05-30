@@ -4,20 +4,30 @@ output = require './output.coffee'
 process = require './process.coffee'
 $(document).ready ()->
   set = []
-  ageLimit = 8
   for i in [0...4]
     $('body').append('<div class="population" id="specimen' + i + '"></div>');
-    initialPopulation = input 2, 32, 8
+    generatedState = input 2, 32, 8
     specimen =
-      states: [initialPopulation]
+      states: [generatedState]
       status: 'alive'
-      params: initialPopulation.params
+      params: generatedState.params
+      initial: generatedState.initial
       element: $('#specimen'+i)
+      age: 0
+    delete generatedState.params
+    delete generatedState.initial
     set.push specimen
-  window.setInterval ->
+  interval = window.setInterval ->
+    isAllDone = true
     for specimen, i in set
-      output specimen.states[specimen.states.length - 1],
-            specimen.element,
-            specimen.params[1]
-      process specimen
+      if specimen.status is 'alive'
+        output specimen.states[specimen.states.length - 1],
+              specimen.element,
+              specimen.params[1]
+        process specimen
+        isAllDone = false
+      else
+        specimen.element.html specimen.status
+    if isAllDone
+      window.clearInterval interval
   , 100
