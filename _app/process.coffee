@@ -53,6 +53,7 @@ module.exports = (specimen)->
           if cell.isAlive
             specimen.status = 'still'
             return false
+    nestedMap newState
   specimen.age++;
   specimen.states = [previousState, newState]
   ###

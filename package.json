@@ -6,7 +6,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt qunit"
+    "test": "grunt mocha"
   },
   "author": {
     "name": "Herman Starikov",
@@ -24,6 +24,7 @@
     "grunt-contrib-watch": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-stylus": "*",
+    "grunt-autoprefixer": "*",
     "grunt-coffeelint": "*",
     "grunt-mocha-test": "^0.10.2",
     "grunt-coffeeify": "^0.1.3"

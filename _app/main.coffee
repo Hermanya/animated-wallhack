@@ -17,6 +17,7 @@ $(document).ready ()->
     delete generatedState.params
     delete generatedState.initial
     set.push specimen
+  _set = []
   interval = window.setInterval ->
     isAllDone = true
     for specimen, i in set
@@ -27,7 +28,10 @@ $(document).ready ()->
         process specimen
         isAllDone = false
       else
-        specimen.element.html specimen.status
+        specimen.element.append '<div class="status"><h1>' + specimen.status + '</h1></div>'
+        _set.push specimen
+        i = set.indexOf specimen
+        set.splice i, 1
     if isAllDone
       window.clearInterval interval
   , 100
