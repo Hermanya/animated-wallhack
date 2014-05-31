@@ -13,7 +13,7 @@ module.exports = (state, element, size)->
       i = size
       while(i--)
         str += '<div class="cell' +
-          (if substate[i].isAlive then ' alive' else '') + '" title="'+substate[i].path+'"></div>'
+          (if substate[i].isAlive then ' alive' else '') + '"></div>'
       str += '</div>'
     element.append str + '</div>'
   else
