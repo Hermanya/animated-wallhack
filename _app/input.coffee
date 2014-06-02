@@ -60,5 +60,4 @@ module.exports = (dimensionNum, dimensionSize, populationSize)->
       console.log 'Cell already exists, respawning.'
   state.initial = population
   state.params = arguments
-  console.log JSON.stringify state
   return state

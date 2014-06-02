@@ -45,17 +45,16 @@ module.exports = (specimen)->
 
   if cellsToToggle.length is 0
     specimen.status = 'dead'
-    nestedMap = (dimension)->
-      if not dimension[0].path
-        dimension.map nestedMap
-      else
-        dimension.map (cell)->
-          if cell.isAlive
-            specimen.status = 'still'
-            return false
-    nestedMap newState
+    if (JSON.stringify(newState).indexOf 'true') isnt -1
+      specimen.status = 'still'
+  else
+    for state, index in specimen.states
+      if JSON.stringify(newState) is JSON.stringify(state)
+        specimen.status = 'period ' + (specimen.states.length-index)
   specimen.age++;
+  specimen.cellsToToggle = cellsToToggle;
   specimen.states = [previousState, newState]
   ###
+ #specimen.states.push newState
   number of surrounding cells = 3 ^ dimensions - 1
   ###

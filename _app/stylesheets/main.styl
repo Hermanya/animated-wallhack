@@ -1,38 +1,45 @@
 borderColor =  #E1E5CA
+backgroundColor = #DCD6B2
 fontColor = #AEA094
 
 html
-  font-family: "04b24", Monospace
-  background-color: #DCD6B2
-  border-top: solid 4px #B8C7A8
-  color: fontColor
+  font-family "04b24", Monospace
+  background-color backgroundColor
+  border-top solid 4px #B8C7A8
+  color fontColor
 .population
-  float: left
-  margin: 0.75em
-  border: solid 4px borderColor
-  background-color: #B0E1CE
-  position: relative
+  float left
+  margin 0.75em
+  border solid 4px borderColor
+  background-color #B0E1CE
+  position relative
   .row
-    height: 8px
+    height 8px
+    line-height 6px
     .cell
-      display: inline-block
-      width: 8px
-      height: 8px
-      transition: 0.5s
+      display inline-block
+      width 8px
+      height 8px
+      transition 0.1s
       &.alive
-        background-color: fontColor
+        background-color fontColor
   .status
-    position: absolute
-    width: 100%
-    height: 100%
-    top: 0
-    transition: 0.5s
-    background-color: borderColor
+    position absolute
+    width 100%
+    height 100%
+    top 0
+    transition 0.5s
+    background-color borderColor
+    h1,h3
+      text-align center
+      width 100%
+      top 50%
+      transform translateY(-1.2em)
+      position absolute
     h1
-      text-align: center
-      width: 100%
-      top: 50%
-      transform: translateY(-1.2em)
-      position: absolute
+      text-transform uppercase
+    h3
+      opacity 0.75
+      transform translateY(0.2em)
     &:hover
-      opacity: 0
+      opacity 0
