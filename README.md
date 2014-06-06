@@ -1,8 +1,7 @@
-
-My life simulator
+[Conway's Game of Life](http://en.wikipedia.org/wiki/Conway's_Game_of_Life 'Wiki') implementation
 =================
 
-This is to be a [*Game of Life*](http://en.wikipedia.org/wiki/Conway's_Game_of_Life 'Wiki') implementation.
+The "game" is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. It generates an initial configuration randomly, then you observe how it evolves.
 
 To do:
 
@@ -10,7 +9,7 @@ To do:
 - [x] display states
   - [x] 1D
   - [x] 2D
-  - [ ] 3D
+  - [ ] any dimension number
 - [ ] use webworkers
 - [ ] genetic algorithms
   - [ ] selection 
