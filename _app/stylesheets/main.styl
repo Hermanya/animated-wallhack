@@ -1,28 +1,35 @@
-borderColor =  #E1E5CA
-backgroundColor = #DCD6B2
-fontColor = #AEA094
-
+borderColor =  #005F6B
+secondaryBorderColor = #00B4CC
+backgroundColor = #343838
+secondaryBackgroundColor = #00DFFC
+fontColor = #343838
+borderWidth = 8px
 html
   font-family "04b24", Monospace
   background-color backgroundColor
-  border-top solid 4px #B8C7A8
+  border-top solid 4px borderColor
   color fontColor
 .population
   float left
   margin 0.75em
-  border solid 4px borderColor
-  background-color #B0E1CE
+  border solid borderWidth borderColor
+  background-color secondaryBackgroundColor
   position relative
-  .row
-    height 8px
-    line-height 6px
-    .cell
-      display inline-block
-      width 8px
+  .dimension
+    border borderWidth solid secondaryBorderColor
+    border-bottom-width 0
+    .row
       height 8px
-      transition 0.1s
-      &.alive
-        background-color fontColor
+      line-height 6px
+      .cell
+        display inline-block
+        width 8px
+        height 8px
+        transition 0.1s
+        &.alive
+          background-color fontColor
+  .dimension:last-child
+    border-bottom-width borderWidth
   .status
     position absolute
     width 100%
@@ -30,6 +37,7 @@ html
     top 0
     transition 0.5s
     background-color borderColor
+    color secondaryBackgroundColor
     h1,h3
       text-align center
       width 100%
