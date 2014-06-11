@@ -15,7 +15,7 @@ module.exports = (grunt) ->
         files:
           'app/style.css': ['_app/stylesheets/*.styl']
     coffeelint:
-      app: ['*.coffee']
+      app: ['*.coffee','_app/*.coffee']
       options:
         configFile: 'coffeelint.json'
     coffeeify:
