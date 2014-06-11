@@ -1,20 +1,22 @@
-module.exports = (specimen)->
-  clone = (object)->
+module.exports = (specimen) ->
+  clone = (object) ->
     object = JSON.stringify object
     return JSON.parse object
   previousState = specimen.states[specimen.states.length - 1]
   newState = clone previousState
   cellsToToggle = []
   dimensionSize = specimen.params[1]
-  nestedMap = (dimension)->
+  dimensionNum = specimen.params[0]
+  k = 1 / 8 * (Math.pow(3, dimensionNum) - 1)
+  nestedMap = (dimension) ->
     if not dimension[0].path
       dimension.map nestedMap
     else
-      dimension.map (givenCell)->
+      dimension.map (givenCell) ->
         lifeCount = 0
-        pathTree = (dimensionIndex, _state)->
+        pathTree = (dimensionIndex, _state) ->
           if not _state.path
-            nextIndex = dimensionIndex + 1;
+            nextIndex = dimensionIndex + 1
             d = d1 = givenCell.path[dimensionIndex]
             pathTree nextIndex, _state[d]
             if d is 0
@@ -28,11 +30,12 @@ module.exports = (specimen)->
             if neighbor.isAlive and (neighbor.path isnt givenCell.path)
               lifeCount++
         pathTree 0, previousState
+
         if givenCell.isAlive
-          if lifeCount < 2 or lifeCount > 3
+          if lifeCount < 2 * k or lifeCount > 3 * k
             cellsToToggle.push givenCell
         else
-          if lifeCount is 3
+          if lifeCount is 3 * k
             cellsToToggle.push givenCell
 
   nestedMap previousState
@@ -50,9 +53,9 @@ module.exports = (specimen)->
   else
     for state, index in specimen.states
       if JSON.stringify(newState) is JSON.stringify(state)
-        specimen.status = 'period ' + (specimen.states.length-index)
-  specimen.age++;
-  specimen.cellsToToggle = cellsToToggle;
+        specimen.status = 'period ' + (specimen.states.length - index)
+  specimen.age++
+  specimen.cellsToToggle = cellsToToggle
   specimen.states = [previousState, newState]
   ###
  #specimen.states.push newState

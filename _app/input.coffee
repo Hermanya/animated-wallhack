@@ -1,12 +1,12 @@
 random = require './random.coffee'
-module.exports = (dimensionNum, dimensionSize, populationSize)->
+module.exports = (dimensionNum, dimensionSize, populationSize) ->
   state = []
 
-  clone = (object)->
+  clone = (object) ->
     object = JSON.stringify object
     return JSON.parse object
 
-  init = (substate, dimensionsLeft, path)->
+  init = (substate, dimensionsLeft, path) ->
     if (dimensionsLeft)
       i = dimensionSize
       while(i--)
@@ -18,7 +18,7 @@ module.exports = (dimensionNum, dimensionSize, populationSize)->
           while(j--)
             cellPath = clone dimensionPath
             cellPath.push(j)
-            substate[i][j] = path:cellPath
+            substate[i][j] = path: cellPath
         init substate[i], dimensionsLeft - 1, dimensionPath
 
   init state, dimensionNum - 1, []
@@ -36,12 +36,12 @@ module.exports = (dimensionNum, dimensionSize, populationSize)->
 # Finally
   substate[halfdimensionSize].isAlive = true
 
-  insertAnotherOne = ()->
+  insertAnotherOne = ->
     cellPath = clone population[random population.length]
   # Shift it
     shiftsNumber = (random dimensionNum) + 1
     while(shiftsNumber--)
-      cellPath[random dimensionNum]+= if random(2) then 1 else -1;
+      cellPath[random dimensionNum]+= if random(2) then 1 else -1
   # Push it
     substate = state
     d = dimensionNum
