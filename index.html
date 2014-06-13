@@ -7,6 +7,19 @@
   <link rel="stylesheet" href="http://c.filler00.com/resources/fonts/04b24/1.0/04b24.css">
 </head>
 <body>
+  <menu>
+    <input type="number" id="specimen-number" value="2" min="0" />
+    <label for="specimen-number">specimens,</label>
+    <input type="number" id="cell-number" value="16" min="0" />
+    <label for="cell-number">cells initially,</label>
+    <input type="number" id="dimension-size" value="32" min="0" />
+    <label for="dimenion-size">cells/dimension,</label>
+    <input type="number" id="dimension-number" value="2" min="2" />
+    <label for="dimension-number">dimensions</label>
+    <button id="apply">apply</button>
+    <button id="stop">stop</button>
+  </menu>
+  <main></main>
   <script data-main="app/config" src="app/script.js"></script>
 </body>
 </html>

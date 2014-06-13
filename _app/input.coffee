@@ -24,7 +24,7 @@ module.exports = (dimensionNum, dimensionSize, populationSize) ->
   init state, dimensionNum - 1, []
 # Prepare for first cell insertion
   population = []
-  halfdimensionSize = dimensionSize / 2
+  halfdimensionSize = ~~(dimensionSize / 2)
   substate = state
   cellPath = []
   d = dimensionNum

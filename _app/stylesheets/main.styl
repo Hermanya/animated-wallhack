@@ -4,10 +4,10 @@ backgroundColor = #343838
 secondaryBackgroundColor = #00DFFC
 fontColor = #343838
 borderWidth = 8px
-html
-  font-family "04b24", Monospace
+fontStack = "04b24", Monospace
+body
+  font-family fontStack
   background-color backgroundColor
-  border-top solid 4px borderColor
   color fontColor
 .population
   float left
@@ -40,6 +40,7 @@ html
     height 100%
     top 0
     transition 0.5s
+    z-index 2
     background-color borderColor
     color secondaryBackgroundColor
     h1,h3
@@ -55,3 +56,30 @@ html
       transform translateY(0.2em)
     &:hover
       opacity 0
+menu
+  background-color borderColor
+  font-size 1.2em
+  input
+    font-size 1.2em
+    width 2em
+    font-family fontStack
+    background-color secondaryBorderColor
+    border none
+    color secondaryBackgroundColor
+    padding-left 0.5em
+  label
+    margin-right 0.5em
+    color secondaryBorderColor
+  button
+    font-family fontStack
+    font-size 1.2em
+    background-color secondaryBackgroundColor
+    border none
+    color secondaryBorderColor
+    text-transform uppercase
+    transition 0.1s
+    &:hover
+      color white
+      cursor pointer
+    &:focus
+      outline none
