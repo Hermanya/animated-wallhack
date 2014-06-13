@@ -35,23 +35,33 @@ module.exports = (dimensionNum, dimensionSize, populationSize) ->
   population.push cellPath
 # Finally
   substate[halfdimensionSize].isAlive = true
-
+# Buggggggggggggggggs@todo
   insertAnotherOne = ->
     cellPath = clone population[random population.length]
   # Shift it
     shiftsNumber = (random dimensionNum) + 1
     while(shiftsNumber--)
-      cellPath[random dimensionNum]+= if random(2) then 1 else -1
+      i = random dimensionNum
+      if random 2
+        cellPath[i] = (cellPath[i] + 1) % dimensionSize
+      else
+        cellPath[i] = (cellPath[i] - 1)
+        if cellPath[i] is -1
+          cellPath[i] = dimensionSize - 1
   # Push it
     substate = state
-    d = dimensionNum
-    while(--d)
-      substate = substate[cellPath[dimensionNum - d - 1]]
-    alreadyExists = substate[cellPath[cellPath.length - 1]].isAlive
+    for d in [0...dimensionNum]
+      x = cellPath[d]
+      if substate is undefined
+        debugger
+      substate = substate[x]
+    if substate is undefined
+      debugger
+    alreadyExists = substate.isAlive
     if alreadyExists
       return false
     else
-      substate[cellPath[cellPath.length - 1]].isAlive = true
+      substate.isAlive = true
       population.push cellPath
       return true
 

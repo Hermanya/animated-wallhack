@@ -17,7 +17,7 @@ html
   position relative
   .dimension
     border borderWidth solid secondaryBorderColor
-    border-bottom-width 0
+    float left
     .row
       height 8px
       line-height 6px
@@ -28,8 +28,12 @@ html
         transition 0.1s
         &.alive
           background-color fontColor
-  .dimension:last-child
-    border-bottom-width borderWidth
+  .dimension-pair:nth-child(2n)
+    .dimension
+      float right
+  .dimension-pair:nth-child(2n + 1)
+    .dimension:first-child
+      transform rotate(90deg)
   .status
     position absolute
     width 100%
