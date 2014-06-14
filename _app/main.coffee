@@ -19,7 +19,9 @@ init = ->
     body.appendChild element
     element.setAttribute 'id', 'specimen' + i
     element.setAttribute 'class', 'population'
-    generatedState = input parseInt(dimensionNumber.value), dimensionSize.value, cellNumber.value
+    generatedState = input parseInt(dimensionNumber.value),
+      dimensionSize.value,
+      cellNumber.value
     specimen =
       states: [generatedState]
       status: 'alive'
