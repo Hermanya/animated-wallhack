@@ -1,4 +1,9 @@
-module.exports = (state, element, size, cellsToToggle, projectionNum) ->
+module.exports = (specimen) ->
+  state = specimen.tree
+  element = specimen.element
+  size = specimen.parameters.numberOfCellsPerDimension
+  projectionNum = specimen.parameters.numberOfDimensions
+  cellsToToggle = specimen.cellsToToggle
   switch projectionNum
     when 1
       element.innerHTML = 'This state is unrenderable! See console output.'
@@ -13,12 +18,11 @@ module.exports = (state, element, size, cellsToToggle, projectionNum) ->
       project = (state, index) ->
         for row in [0...size]
           for column in [0...size]
-            console.log row, column
             x = element.childNodes[~~(index / 2)]
             x = x.childNodes[index % 2]
             x = x.childNodes[row]
             x = x.childNodes[column]
-            if state[row][column].isAlive
+            if state[row][column].isLive
               x.classList.add 'alive'
             else
               x.classList.remove 'alive'
@@ -32,25 +36,25 @@ module.exports = (state, element, size, cellsToToggle, projectionNum) ->
           for j in [0...size]
             array[0][j].path.splice(-2,1)
             for k in [1...size]
-              if array[0][j].isAlive
+              if array[0][j].isLive
                 break
               else
-                array[0][j].isAlive = array[k][j].isAlive
+                array[0][j].isLive = array[k][j].isLive
           return array[0]
         merge2 = (array) ->
           for i in [0...size]
             for j in [0...size]
               array[0][i][j].path.splice(-3,1)
               for k in [1...size]
-                if (array[0][i][j].isAlive)
+                if (array[0][i][j].isLive)
                   break
                 else
-                  array[0][i][j].isAlive = array[k][i][j].isAlive
+                  array[0][i][j].isLive = array[k][i][j].isLive
           return array[0]
         merge = (array) ->
-          value = array.reduce ((a, c) -> if c.isAlive then a + 1 else a), 0
+          value = array.reduce ((a, c) -> if c.isLive then a + 1 else a), 0
           array[0].path.pop()
-          reducedCell = isAlive: !!value, path: array[0].path
+          reducedCell = isLive: !!value, path: array[0].path
           return reducedCell
         iter = (dimensions, deepness) ->
           if dimensions.path # is last dimension

@@ -1,63 +1,35 @@
 module.exports = (specimen) ->
-  clone = (object) ->
-    object = JSON.stringify object
-    return JSON.parse object
-  previousState = specimen.states[specimen.states.length - 1]
-  newState = clone previousState
-  cellsToToggle = []
-  dimensionSize = specimen.params[1]
-  dimensionNum = specimen.params[0]
-  k = 1 / 8 * (Math.pow(3, dimensionNum) - 1)
-  nestedMap = (dimension) ->
-    if not dimension[0].path
-      dimension.map nestedMap
+  list = specimen.list
+  specimen.cellsToToggle = []
+  dimensionSize = specimen.parameters.numberOfCellsPerDimension
+  dimensionNum = specimen.parameters.numberOfDimensions
+# Number of adjacent cells = 3 ^ numberOfDimensions - 1
+  numberOfAdjacentCells = Math.pow(3, dimensionNum) - 1
+  k = 1 / 8 * numberOfAdjacentCells
+  for group in list
+    counter = 0
+    for i in [1..numberOfAdjacentCells]
+      if group[i].isLive
+        counter++
+    givenCell = group[0]
+    if givenCell.isLive
+      if counter < 2 or counter > 3
+        specimen.cellsToToggle.push givenCell
     else
-      dimension.map (givenCell) ->
-        lifeCount = 0
-        pathTree = (dimensionIndex, _state) ->
-          if not _state.path
-            nextIndex = dimensionIndex + 1
-            d = d1 = givenCell.path[dimensionIndex]
-            pathTree nextIndex, _state[d]
-            if d is 0
-              d = dimensionSize
-            pathTree nextIndex, _state[d - 1]
-            if d1 is dimensionSize - 1
-              d1 = -1
-            pathTree nextIndex, _state[d1 + 1]
-          else
-            neighbor = _state
-            if neighbor.isAlive and (neighbor.path isnt givenCell.path)
-              lifeCount++
-        pathTree 0, previousState
+      if counter > 2 and counter < 4
+        specimen.cellsToToggle.push givenCell
 
-        if givenCell.isAlive
-          if lifeCount < 2 * k or lifeCount > 3 * k
-            cellsToToggle.push givenCell
-        else
-          if lifeCount is 3 * k
-            cellsToToggle.push givenCell
+  for cell in specimen.cellsToToggle
+    cell.isLive = ! cell.isLive
 
-  nestedMap previousState
-
-  for cell in cellsToToggle
-    _state = newState
-    for index in cell.path
-      _state = _state[index]
-    _state.isAlive = ! _state.isAlive
-
-  if cellsToToggle.length is 0
-    specimen.status = 'dead'
-    if (JSON.stringify(newState).indexOf 'true') isnt -1
+  string = list.toString()
+  if specimen.cellsToToggle.length is 0
+    specimen.status = 'empty'
+    if (string.indexOf '1') isnt -1
       specimen.status = 'still'
   else
-    for state, index in specimen.states
-      if JSON.stringify(newState) is JSON.stringify(state)
+    for previous, index in specimen.states
+      if string is previous
         specimen.status = 'period ' + (specimen.states.length - index)
+  specimen.states.push string
   specimen.age++
-  specimen.cellsToToggle = cellsToToggle
-  specimen.states = [previousState, newState]
-  ###
- #specimen.states.push newState
-  number of surrounding cells = 3 ^ dimensions - 1
-  ###
