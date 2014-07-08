@@ -27,6 +27,7 @@ module.exports = (options) ->
   init stateTree, dimensionNum - 1, []
 # Prepare for first cell insertion
   population = []
+  cellsToToggle = []
   halfdimensionSize = ~~(dimensionSize / 2)
   subTree = stateTree
   cellPath = []
@@ -36,6 +37,7 @@ module.exports = (options) ->
     subTree = subTree[halfdimensionSize]
   cellPath.push halfdimensionSize
   population.push cellPath
+  cellsToToggle.push {path: cellPath}
 # Finally
   subTree[halfdimensionSize].isLive = true
 # Buggggggggggggggggs@todo
@@ -62,8 +64,9 @@ module.exports = (options) ->
     else
       subTree.isLive = true
       population.push cellPath
+      cellsToToggle.push {path: cellPath}
       return true
-      
+
   while(--populationSize)
     while(!insertAnotherOne())
       console.log 'Cell already exists, respawning.'
@@ -114,4 +117,8 @@ module.exports = (options) ->
     tree: stateTree
     initialPopulation: population
     parameters: options
+    states: [stateList.toString()]
+    status: 'live'
+    cellsToToggle: cellsToToggle
+    age: 0
   }

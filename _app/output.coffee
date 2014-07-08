@@ -26,13 +26,8 @@ module.exports = (specimen) ->
               x.classList.add 'alive'
             else
               x.classList.remove 'alive'
-      reduce = (state, projectionIndex) ->
-        ###
-          first reduce leaves until deepness is projection Index + 1
-          then skip 2
-          then merge 2 dimensional matrices
-        ###
-        merge1 = (array) ->
+      reduce = (state, index) ->
+        mergeBranchesOfLeaves = (array) ->
           for j in [0...size]
             array[0][j].path.splice(-2,1)
             for k in [1...size]
@@ -41,7 +36,7 @@ module.exports = (specimen) ->
               else
                 array[0][j].isLive = array[k][j].isLive
           return array[0]
-        merge2 = (array) ->
+        mergeBranchesOfBranches = (array) ->
           for i in [0...size]
             for j in [0...size]
               array[0][i][j].path.splice(-3,1)
@@ -51,29 +46,26 @@ module.exports = (specimen) ->
                 else
                   array[0][i][j].isLive = array[k][i][j].isLive
           return array[0]
-        merge = (array) ->
+        mergeLeaves = (array) ->
           value = array.reduce ((a, c) -> if c.isLive then a + 1 else a), 0
           array[0].path.pop()
           reducedCell = isLive: !!value, path: array[0].path
           return reducedCell
-        iter = (dimensions, deepness) ->
+        iter = (dimensions, level) ->
           if dimensions.path # is last dimension
             return dimensions
           else
-          # pop every reduce
-          # is good? return array, else merge dependent on number of good
-          # is array of pbkects. elese array of arrays
             array = []
             for i in [0...size]
-              array.push iter dimensions[i], deepness + 1
-            if deepness is projectionIndex or deepness is (projectionIndex + 1) % projectionNum
+              array.push iter dimensions[i], level + 1
+            if level is index or level is (index + 1) % projectionNum
               return array
             if array[0].path
-              return merge array
+              return mergeLeaves array
             if array[0][0].path
-              return merge1 array
+              return mergeBranchesOfLeaves array
             if array[0][0][0].path
-              return merge2 array
+              return mergeBranchesOfBranches array
         iter state, 0
       for i in [0...projectionNum]
         _state = JSON.parse JSON.stringify state
