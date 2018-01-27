@@ -20,16 +20,16 @@
     }
   ],
   "devDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "~1.0.1",
     "grunt-contrib-watch": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-stylus": "*",
     "grunt-autoprefixer": "*",
     "grunt-coffeelint": "*",
-    "grunt-mocha-test": "^0.10.2",
+    "grunt-mocha-test": "^0.13.3",
     "grunt-coffeeify": "^0.1.3"
   },
   "dependencies": {
-    "mocha": "^1.20.1"
+    "mocha": "^5.0.0"
   }
 }
